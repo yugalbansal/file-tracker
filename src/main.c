@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "storage.h"
+#include "scanner.h"
+#include "file.h"
 
 int main(int argc, char *argv[])
 {
@@ -31,6 +33,14 @@ int main(int argc, char *argv[])
             printf("Error: could not create .ft directory\n");
             return 1;
         }
+        
+        Node *root = ReadDirectory(path);
+        if (root == NULL)
+        {
+            printf("Error: could not read directory\n");
+            return 1;
+        }
+        freeNode(root);
     }
     else
     {
