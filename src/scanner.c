@@ -51,6 +51,7 @@ Node *ReadDirectory(char *path)
         }
     }
 
+    sortChildren(root);
     closedir(dir);
     return root;
 }

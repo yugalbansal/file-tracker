@@ -12,6 +12,7 @@ typedef struct Node{
 
 Node *createNode(char *name, int isDirectory);
 void addChild(Node *parent, Node *child);
+void sortChildren(Node *node);
 void freeNode(Node *node);
 
 #endif
