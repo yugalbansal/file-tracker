@@ -5,6 +5,7 @@
 #include "storage.h"
 #include "scanner.h"
 #include "file.h"
+#include "hash.h"
 
 int main(int argc, char *argv[])
 {
@@ -40,6 +41,8 @@ int main(int argc, char *argv[])
             printf("Error: could not read directory\n");
             return 1;
         }
+        
+        updateHashes(root);
         freeNode(root);
     }
     else

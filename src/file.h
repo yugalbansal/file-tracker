@@ -3,6 +3,7 @@
 
 typedef struct Node{
     char path[1000];
+    char hash[65];
     int isDirectory;
 
     struct Node **children;
@@ -10,7 +11,7 @@ typedef struct Node{
     int capacity;
 } Node;
 
-Node *createNode(char *name, int isDirectory);
+Node *createNode(char *name, char *hash, int isDirectory);
 void addChild(Node *parent, Node *child);
 void sortChildren(Node *node);
 void freeNode(Node *node);

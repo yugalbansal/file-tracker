@@ -16,7 +16,7 @@ Node *ReadDirectory(char *path)
         return NULL;
     }
 
-    Node *root = createNode(path, 1);
+    Node *root = createNode(path, "", 1);
     if (root == NULL)
     {
         closedir(dir);
@@ -41,7 +41,7 @@ Node *ReadDirectory(char *path)
 
         if (S_ISREG(st.st_mode))
         {
-            Node *file = createNode(newPath, 0);
+            Node *file = createNode(newPath, "", 0);
             if (file != NULL) addChild(root, file);
         }
         else if (S_ISDIR(st.st_mode))

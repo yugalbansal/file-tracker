@@ -59,11 +59,12 @@ static void mergeSort(Node **arr, int left, int right)
     merge(arr, left, mid, right);
 }
 
-Node *createNode(char *name, int isDirectory)
+Node *createNode(char *name, char *hash, int isDirectory)
 {
     Node *node = malloc(sizeof(Node));
     if (node == NULL) return NULL;
     strcpy(node->path, name);
+    strcpy(node->hash, hash);
     node->isDirectory = isDirectory;
     node->children = NULL;
     node->childCount = 0;
