@@ -44,6 +44,48 @@ int hashFile(char *path, char *hash)
     return 0;
 }
 
+void calculateDirectoryHash(Node *node)
+{
+    SHA256_CTX ctx;
+    unsigned char raw[SHA256_DIGEST_LENGTH];
+
+    SHA256_Init(&ctx);
+
+    for (int i = 0; i < node->childCount; i++)
+    {
+        char data[1100];
+        snprintf(
+            data,
+            sizeof(data),
+            "%c %s %s",
+            node->children[i]->isDirectory ? 'D' : 'F',
+            node->children[i]->path,
+            node->children[i]->hash
+        );
+        SHA256_Update(&ctx, data, strlen(data));
+    }
+
+    SHA256_Final(raw, &ctx);
+
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+        sprintf(node->hash + i * 2, "%02x", raw[i]);
+    }
+    node->hash[64] = '\0';
+}
+
+void calculateTreeHash(Node *node)
+{
+    if (node == NULL) return;
+    if (!node->isDirectory) return;
+
+    for (int i = 0; i < node->childCount; i++)
+    {
+        calculateTreeHash(node->children[i]);
+    }
+    calculateDirectoryHash(node);
+}
+
 void updateHashes(Node *node)
 {
     if (node == NULL) return;
@@ -56,4 +98,5 @@ void updateHashes(Node *node)
     {
         updateHashes(node->children[i]);
     }
+    calculateDirectoryHash(node);
 }
