@@ -43,6 +43,17 @@ int main(int argc, char *argv[])
         }
         
         updateHashes(root);
+
+        int fd = open(indexPath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (fd == -1)
+        {
+            printf("Error: could not create index\n");
+            freeNode(root);
+            return 1;
+        }
+        saveTree(fd, root);
+        close(fd);
+
         freeNode(root);
     }
     else

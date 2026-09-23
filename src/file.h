@@ -6,10 +6,15 @@ typedef struct Node{
     char hash[65];
     int isDirectory;
 
+    long long size;
+    long long mtime;
+    long long ctime;
+
     struct Node **children;
     int childCount;
     int capacity;
 } Node;
+
 
 Node *createNode(char *name, char *hash, int isDirectory);
 void addChild(Node *parent, Node *child);
