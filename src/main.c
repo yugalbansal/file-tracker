@@ -6,6 +6,7 @@
 #include "scanner.h"
 #include "file.h"
 #include "hash.h"
+#include "verify.h"
 
 int main(int argc, char *argv[])
 {
@@ -42,7 +43,7 @@ int main(int argc, char *argv[])
             return 1;
         }
         
-        updateHashes(root);
+        updateHashes(root, NULL);
 
         int fd = open(indexPath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (fd == -1)
@@ -53,7 +54,53 @@ int main(int argc, char *argv[])
         }
         saveTree(fd, root);
         close(fd);
+        freeNode(root);
+    }
+    else if (strcmp(argv[1], "update") == 0)
+    {
+        if (access(indexPath, F_OK) != 0)
+        {
+            printf("file tracker not initialized\n");
+            return 1;
+        }
 
+        int oldFd = open(indexPath, O_RDONLY);
+        if (oldFd == -1)
+        {
+            printf("Error: could not open index\n");
+            return 1;
+        }
+        Node *oldRoot = loadTree(oldFd);
+        close(oldFd);
+        
+        if (oldRoot == NULL)
+        {
+            printf("Error: could not load old tree\n");
+            return 1;
+        }
+        
+        Node *root = ReadDirectory(path);
+        if (root == NULL)
+        {
+            printf("Error: could not read directory\n");
+            freeNode(oldRoot);
+            return 1;
+        }
+
+        updateHashes(root, oldRoot);
+
+        int fd = open(indexPath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (fd == -1)
+        {
+            printf("Error: could not open index\n");
+            freeNode(oldRoot);
+            freeNode(root);
+            return 1;
+        }
+        saveTree(fd, root);
+        close(fd);
+
+        freeNode(oldRoot);
         freeNode(root);
     }
     else
