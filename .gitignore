@@ -53,3 +53,11 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Project specific
+merkleTree
+.ft/
+testdir/
+.DS_Store
+.vscode/
+.idea/
